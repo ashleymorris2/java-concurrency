@@ -1,7 +1,7 @@
 /**
  * Created by Ashley Morris on 17/12/2014.
  *
- * 1. Road objects should NOT run as threads.
+ * 1. Concurrency.Road objects should NOT run as threads.
  *
  * 2. In the simulation, the road sections are acting as passive buffers (shared memory space) between
  * the various entry points, junctions and car parks. In other words, you have something like several
@@ -19,9 +19,14 @@
  * available for them to remove or not.
  *
  */
+
+package Concurrency;
+
+//Buffer
+
 public class Road {
 
-
+    private Vehicle [] cars; //The array that represents the cars currently on the road.
 
 
 }
