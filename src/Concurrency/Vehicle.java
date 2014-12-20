@@ -9,7 +9,7 @@
  * created according to configurable ratios), the time it entered Gridlock, and the time it finally
  * parked.
  *
- * 3. As well as constructor and destructor methods, a Concurrency.Vehicle must have a method to allow a Junction
+ * 3. As well as constructor and destructor methods, Vehicle must have a method to allow a Junction
  * to read the vehicle’s destination.
  *
  */
@@ -17,7 +17,6 @@
 package Concurrency;
 
 public class Vehicle {
-
 
     private int destination; // An integer representing the vehicles final destination (1-4 for the moment)
     private long timeEntered; //The time in milliseconds representing when the vehicle arrives in the simulation
