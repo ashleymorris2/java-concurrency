@@ -2,14 +2,14 @@
  * Created by Ashley Morris on 17/12/2014.
  *
  *
- * 1. Concurrency.Vehicle objects are created by Concurrency.EntryPoint objects to simulate the vehicles arriving on the local road
+ * 1. Concurrency.Vehicle objects are created by Concurrency. EntryPoint objects to simulate the vehicles arriving on the local road
  * network from the motorway junctions etc.
  *
  * 2. The class needs to have attributes which store its destination (one of several, determined when it is
  * created according to configurable ratios), the time it entered Gridlock, and the time it finally
  * parked.
  *
- * 3. As well as constructor and destructor methods, Vehicle must have a method to allow a Junction
+ * 3. As well as constructor and (destructor??) methods, Vehicle must have a method to allow a Junction
  * to read the vehicle’s destination.
  *
  */
