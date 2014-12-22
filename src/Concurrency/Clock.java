@@ -9,9 +9,9 @@ import java.util.Calendar;
  */
 public class Clock extends Thread {
 
-    private Calendar time;
+    private static Calendar time;
 
-    private int hours, mins, secs;
+    private static int hours, mins, secs;
 
     public Clock() {
         //Constructs a clock and sets the time to 12pm.

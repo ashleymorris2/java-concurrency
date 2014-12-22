@@ -20,16 +20,47 @@ package Concurrency;
 public class EntryPoint extends Thread {
 
     private Vehicle car; //The car that is generated to be passed into the buffer (road)
-
     private Road road; //The buffer that represents the section of road that this entry point is connected to.
+
     private String id; // The name of this entry point. (North, East or South)
     private int maxNumOfCars;//The maximum number of cars that this entry point is to generate per hour.
 
+    private Clock clock;
 
-    public EntryPoint(Road road, String id, int maxNumOfCars) {
+
+    public EntryPoint(Road road, String id, int maxNumOfCars, Clock clock) {
         this.road = road;
         this.id = id;
         this.maxNumOfCars = maxNumOfCars;
+        this.clock = clock;
+    }
+
+
+    //Generates a car with a random destination and feeds it into the road network that this entry point is connected to
+    public void generate() {
+
+        System.out.println("Item producing");
+        int destination = assignDestination();
+
+        car = new Vehicle(destination, 0);
+        road.insert(car);
+
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < maxNumOfCars; i++) {
+            try {
+                sleep((int) (Math.random()) * 5);
+            } catch (InterruptedException iex) {
+
+            }
+            //Check to see if there is any space on the road before attempting to place a car on it.
+            if(road.isSpace()){
+                generate();
+            }
+
+        }
     }
 
 
@@ -39,36 +70,25 @@ public class EntryPoint extends Thread {
      2: Station = 20%
      3: Shopping Centre = 30%
      4: Industrial Park = 40%
-    **/
+     **/
     int assignDestination(){
 
         int randNumber = (int) (Math.random() * 100) + 1;
         int destination = 0;
 
-       if (randNumber <= 10){
+        if (randNumber <= 10){
             destination = 1;
         }
         else if(randNumber > 10 && randNumber <=30){
-           destination = 2;
-       }
+            destination = 2;
+        }
         else if (randNumber > 30 && randNumber <= 60){
-           destination = 3;
-       }
+            destination = 3;
+        }
         else if (randNumber > 60){
-           destination = 4;
-       }
+            destination = 4;
+        }
 
         return destination;
     }
-
-    //Generates a car with a random destination and feeds it into the road network that this entry point is connected to
-    public void generate(){
-
-        int destination = assignDestination();
-
-
-
-    }
-
-
 }
