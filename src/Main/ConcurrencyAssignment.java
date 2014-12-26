@@ -2,6 +2,7 @@ package Main;
 
 import Concurrency.Clock;
 import Concurrency.EntryPoint;
+import Concurrency.Junction;
 import Concurrency.Road;
 
 /**
@@ -18,6 +19,8 @@ public class ConcurrencyAssignment {
 
         myClock.start();
         north.start();
+
+
 
     }
 }

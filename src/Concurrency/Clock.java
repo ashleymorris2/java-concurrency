@@ -10,7 +10,6 @@ import java.util.Calendar;
 public class Clock extends Thread {
 
     private static Calendar time;
-
     private static int hours, mins, secs;
 
     public Clock() {
@@ -21,10 +20,12 @@ public class Clock extends Thread {
         time.set(Calendar.SECOND, 0);
     }
 
+
     @Override
     public void run() {
         while (hours <= 13) {
-            //Increase the time on the clock object by 5 seconds every 'tick' while the hour is less than or equal to 13
+
+            //Increase the time on the clock object by 5 seconds every 'tick'.
             try {
                 time.add(Calendar.SECOND, 5);
 
@@ -34,12 +35,26 @@ public class Clock extends Thread {
 
                 System.out.println("time is " + hours+ ":" + mins + ":" + secs);
 
-                sleep(1000);//Pause of one second else the time will update too fast.
-
-            } catch (InterruptedException e) {
+                sleep(1000);//Pause of one second or else the time will update too fast.
 
             }
+            catch (InterruptedException iex) {
 
+            }
         }
     }
+
+
+    /**
+     * Gets a timestamp of the current clock time in milliseconds.
+     *
+     * @return A long that represents the current time on the clock in milliseconds.
+     */
+    public synchronized long getTimeStamp(){
+
+        long timeStamp = time.getTimeInMillis();
+
+        return timeStamp;
+    }
+
 }

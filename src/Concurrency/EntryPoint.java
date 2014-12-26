@@ -27,7 +27,6 @@ public class EntryPoint extends Thread {
 
     private Clock clock;
 
-
     public EntryPoint(Road road, String id, int maxNumOfCars, Clock clock) {
         this.road = road;
         this.id = id;
@@ -36,30 +35,33 @@ public class EntryPoint extends Thread {
     }
 
 
-    //Generates a car with a random destination and feeds it into the road network that this entry point is connected to
+    /**Generates a car with a random destination and feeds it into the road network that this entry
+     * point is connected to.
+     */
     public void generate() {
 
         System.out.println("Item producing");
         int destination = assignDestination();
+        long timeStamp = clock.getTimeStamp();
 
-        car = new Vehicle(destination, 0);
+        car = new Vehicle(destination, timeStamp);
         road.insert(car);
-
     }
+
 
     @Override
     public void run() {
         for (int i = 0; i < maxNumOfCars; i++) {
             try {
-                sleep((int) (Math.random()) * 5);
-            } catch (InterruptedException iex) {
+                sleep((int) (Math.random()) * 50);
+            }
+            catch (InterruptedException iex) {
 
             }
             //Check to see if there is any space on the road before attempting to place a car on it.
             if(road.isSpace()){
                 generate();
             }
-
         }
     }
 

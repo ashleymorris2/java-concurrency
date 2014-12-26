@@ -44,6 +44,8 @@ public class Road {
     private int head = 0;//The current beginning (first element) of the buffer. Read from.
     private int tail = 0;//The current end (last element) of the buffer. Write to.
 
+    private static int objectCounter = 0; //Counts how many roads have been created in order to assign each one a unique id
+    private int id; //An integer to identify this section of road.
 
     /**
      * Constructor for the Road class.
@@ -58,6 +60,8 @@ public class Road {
         }
         cars = new Vehicle[size];
         available = 0;
+
+        this.id = objectCounter++;
     }
 
 
@@ -116,6 +120,8 @@ public class Road {
 
         //Retrieve the first car in the array:
         car = cars[head];
+        cars[head] = null;
+
         available --;
         head++;
 
@@ -138,12 +144,36 @@ public class Road {
 
 
     /**
+     * Returns the id for the calling road object.
+     *
+     * @return The id for the calling Road object.
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
      * Checks whether a car is available for removal.
      *
      * @return The number of elements (cars) that are currently available for removal.
      */
     public synchronized int size(){
         return available;
+    }
+
+
+    /**
+     * Checks whether a car is available for removal.
+     *
+     * @return True if there is 1 or more. False if not.
+     */
+    public synchronized boolean isAvailable(){
+        if(available > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 
