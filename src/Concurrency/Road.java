@@ -44,6 +44,8 @@ public class Road {
     private int head = 0;//The current beginning (first element) of the buffer. Read from.
     private int tail = 0;//The current end (last element) of the buffer. Write to.
 
+    private String fromDirection;
+
     private static int objectCounter = 0; //Counts how many roads have been created in order to assign each one a unique id
     private int id; //An integer to identify this section of road.
 
@@ -142,6 +144,17 @@ public class Road {
         return cars.length;
     }
 
+    /**
+     * Gets the destination for the next car that is in the buffer without removing it. (In case of a gridlock situation)
+
+     * @return An integer representing the next cars destination.
+     */
+
+    public synchronized int getNextDestination(){
+
+        return cars[head].getDestination();
+    }
+
 
     /**
      * Returns the id for the calling road object.
@@ -152,12 +165,13 @@ public class Road {
         return id;
     }
 
+
     /**
      * Checks whether a car is available for removal.
      *
-     * @return The number of elements (cars) that are currently available for removal.
+     * @return The number of elements (cars) that are currently waiting (available) for removal.
      */
-    public synchronized int size(){
+    public synchronized int getWaiting(){
         return available;
     }
 
@@ -174,6 +188,16 @@ public class Road {
         else{
             return false;
         }
+    }
+
+
+    public void setFromDirection(String direction){
+        this.fromDirection = direction;
+    }
+
+
+    public String getFromDirection(){
+        return this.fromDirection;
     }
 
 

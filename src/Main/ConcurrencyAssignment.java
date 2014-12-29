@@ -13,14 +13,13 @@ public class ConcurrencyAssignment {
     public static void main(String[] args) {
 
         Clock myClock = new Clock();
+
         Road road1 = new Road(50);
 
         EntryPoint north = new EntryPoint(road1, "north", 550, myClock);
 
+
         myClock.start();
         north.start();
-
-
-
     }
 }

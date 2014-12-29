@@ -5,7 +5,6 @@ import java.util.Calendar;
 
 /**
  * Created by Ashley Morris on 21/12/2014.
-
  */
 public class Clock extends Thread {
 
@@ -46,6 +45,28 @@ public class Clock extends Thread {
 
 
     /**
+     * Checks to see if the duration has elapsed between the time stamp and now.
+     *
+     * @param timeStamp The time in milliseconds to measure from.
+     * @param duration The difference in seconds between
+     * @return True if the difference is 0. False if not.
+     */
+    public synchronized boolean timerCompleted(Long timeStamp, int duration){
+
+        Long difference = time.getTimeInMillis() - timeStamp; //Calculate the difference between the two time periods.
+        int differenceSecs = (int) (difference / 1000); //Difference in seconds. 1 second = 1000 milliseconds.
+
+        //If seconds difference is equal to the duration then the timer is completed.
+        if(differenceSecs == duration){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+    /**
      * Gets a timestamp of the current clock time in milliseconds.
      *
      * @return A long that represents the current time on the clock in milliseconds.
@@ -56,5 +77,7 @@ public class Clock extends Thread {
 
         return timeStamp;
     }
+
+
 
 }
