@@ -11,18 +11,21 @@ public class Clock extends Thread {
     private static Calendar time;
     private static int hours, mins, secs;
 
+    private boolean simulation;
+
     public Clock() {
         //Constructs a clock and sets the time to 12pm.
         time = Calendar.getInstance();
         time.set(Calendar.HOUR_OF_DAY, 12);
         time.set(Calendar.MINUTE, 0);
         time.set(Calendar.SECOND, 0);
+        simulation = true;
     }
 
 
     @Override
     public void run() {
-        while (hours <= 13) {
+        while (simulation) {
 
             //Increase the time on the clock object by 5 seconds every 'tick'.
             try {
@@ -31,6 +34,11 @@ public class Clock extends Thread {
                 hours = time.get(Calendar.HOUR_OF_DAY);
                 mins = time.get(Calendar.MINUTE);
                 secs = time.get(Calendar.SECOND);
+
+                if(hours == 13 && mins == 0 && secs == 0){
+                    System.out.println("OVER");
+                    simulation = false;
+                }
 
                 System.out.println("time is " + hours+ ":" + mins + ":" + secs);
 
@@ -63,6 +71,15 @@ public class Clock extends Thread {
         else{
             return false;
         }
+    }
+
+
+    /**
+     * Returns the status of the simulation.
+     * @return A boolean. True if the simulation is still running. False if not.
+     */
+    public synchronized boolean simulationRunning(){
+        return simulation;
     }
 
 

@@ -10,7 +10,9 @@ import Enum.Compass;
 public class Junction extends Thread {
 
     private Road inNorth, inEast, inSouth, inWest; //The roads representing the way into this junction
-    private Road outNorth, outEast, outSouth, outWest;//The roads representing the way out of this junction
+    private Road outNorth, outEast, outSouth, outWest;//The roads representing the way out of this
+
+    private Compass first, second, third, fourth;
 
     private int id;
     private int carsThrough = 0;/*A simple counter that counts how many cars
@@ -20,9 +22,17 @@ public class Junction extends Thread {
     SimpleDateFormat minutesSeconds = new SimpleDateFormat("mmmsss");
 
     //Stores a list of destinations and their associated exit routes from this junction.
+    // Integer represents the destination, String represents the direction the vehicle has to exit the
+    // junction for that destination.
     private Map<Integer, String> destinationList;
 
 
+    /**constructor
+     *
+     * @param clock
+     * @param id
+     * @param destinationList
+     */
     public Junction(Clock clock, int id, Map destinationList) {
         this.clock = clock;
         this.id = id;
@@ -66,10 +76,13 @@ public class Junction extends Thread {
         this.outWest = outWest;
     }
 
-
     //==================================================================================================================
 
+
+
     /**
+     * Runs while this section of in road is green.
+     *
      * @param inRoad    The Road leading into this junction where the lights are currently green.
      * @param timeStamp The time in milliseconds representing when the time the lights on this junction turned green for
      *                  this section of road in.
@@ -85,7 +98,7 @@ public class Junction extends Thread {
         //Upon waking check if this light should still be green. Before testing the loop condition again.
         while (!inRoad.isAvailable()) {
             try {
-                sleep(500);
+                sleep(100);
             } catch (InterruptedException e) {
             }
             if (clock.timerCompleted(timeStamp, duration)) {
@@ -114,7 +127,7 @@ public class Junction extends Thread {
             } catch (InterruptedException e) {
             }
             if (clock.timerCompleted(timeStamp, duration)) {
-                //Lights have changed!
+                //Lights have changed! Final report:
                 System.out.println("Time:" + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
                         + carsThrough + " cars through from " + inRoad.getFromDirection() + "," + inRoad.getWaiting() +
                         " cars waiting.");
@@ -141,6 +154,7 @@ public class Junction extends Thread {
             //Timer hasn't completed the lights are still green:
             return true;
         } else {
+            //Final report.
             System.out.println("Time:" + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
                     + carsThrough + " cars through from " + inRoad.getFromDirection() + "," + inRoad.getWaiting() +
                     " cars waiting.");
@@ -148,10 +162,64 @@ public class Junction extends Thread {
         }
     }
 
+    /**
+     * Sets the sequence that the lights operate in, refered to by their direction. Some directions can operate twice,
+     * or not at all depending on the configuration.
+     *
+     * @param first The direction of the first light in the sequence.
+     * @param second
+     * @param third
+     * @param fourth
+     */
+    public void setLightsSequence(String first, String second, String third, String fourth){
+
+        String upperCase;
+
+        //First converts the passed string to an upper case value. Then passes this value the enum class.
+        //Allows for null.
+        //This will store the direction
+        try {
+            if(first != null) {
+                upperCase = first.toUpperCase();
+                this.first = Compass.valueOf(upperCase);
+            }
+            if(second!=null) {
+                upperCase = second.toUpperCase();
+                this.second = Compass.valueOf(upperCase);
+            }
+            if(third != null) {
+                upperCase = third.toUpperCase();
+                this.third = Compass.valueOf(upperCase);
+            }
+            if(fourth != null) {
+                upperCase = fourth.toUpperCase();
+                this.third = Compass.valueOf(upperCase);
+            }
+        }
+
+        catch (IllegalArgumentException e) {
+            //Catch this exception in main.
+            System.out.println("Invalid compass direction!");
+            throw new IllegalArgumentException();
+        }
+
+    }
+
+
+    /**
+     * Takes a destination integer and searches the map for the corresponding exit route. Then returns the Road that
+     * represents that exit.
+     *
+     * @param destination The vehicles final destination. Maps to one of 4 directions out of the junction.
+     * @return The exit road that maps to that destination.
+     */
     public Road getExitRoute(int destination){
 
+        //Searches the map by the destination.
         String exitDirection = destinationList.get(destination);
-        exitDirection = exitDirection.toUpperCase(); 
+
+        //Convert to uppercase.
+        exitDirection = exitDirection.toUpperCase();
 
         try {
             Compass direction = Compass.valueOf(exitDirection);
@@ -168,7 +236,9 @@ public class Junction extends Thread {
         }
         //ValueOf throws IllegalArgumentException if passed a string that isn't a valid member.
         catch (IllegalArgumentException ie){
+            //Catch in main.
             System.out.println("Invalid compass direction!");
+            throw new IllegalArgumentException();
         }
 
         //default return null
@@ -178,9 +248,20 @@ public class Junction extends Thread {
 
     public void run() {
 
-        //while simulation is running:
+        while (clock.simulationRunning()){
 
-        //while "green" isGreen 1{
+            //get timestamp
+            //1st while green
+
+            //get timestamp
+            //2nd
+
+            //get timestamp
+            //3rd
+
+            //get timestamp
+            //4th
+        }
 
     }
 

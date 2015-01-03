@@ -46,8 +46,6 @@ public class Road {
 
     private String fromDirection;
 
-    private static int objectCounter = 0; //Counts how many roads have been created in order to assign each one a unique id
-    private int id; //An integer to identify this section of road.
 
     /**
      * Constructor for the Road class.
@@ -62,8 +60,6 @@ public class Road {
         }
         cars = new Vehicle[size];
         available = 0;
-
-        this.id = objectCounter++;
     }
 
 
@@ -153,16 +149,6 @@ public class Road {
     public synchronized int getNextDestination(){
 
         return cars[head].getDestination();
-    }
-
-
-    /**
-     * Returns the id for the calling road object.
-     *
-     * @return The id for the calling Road object.
-     */
-    public int getId() {
-        return id;
     }
 
 
