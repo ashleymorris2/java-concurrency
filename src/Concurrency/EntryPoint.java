@@ -40,7 +40,7 @@ public class EntryPoint extends Thread {
      */
     public void generate() {
 
-        System.out.println("Item producing");
+        //System.out.println("Item producing");
         int destination = assignDestination();
         long timeStamp = clock.getTimeStamp();
 
@@ -51,17 +51,17 @@ public class EntryPoint extends Thread {
 
     @Override
     public void run() {
+        if(road.isSpace()){
         for (int i = 0; i < maxNumOfCars; i++) {
             try {
                 sleep((int) (Math.random()) * 50);
-            }
-            catch (InterruptedException iex) {
+            } catch (InterruptedException iex) {
 
             }
             //Check to see if there is any space on the road before attempting to place a car on it.
-            if(road.isSpace()){
-                generate();
-            }
+
+            generate();
+        }
         }
     }
 

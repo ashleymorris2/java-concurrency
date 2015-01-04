@@ -40,7 +40,7 @@ public class Clock extends Thread {
                     simulation = false;
                 }
 
-                System.out.println("time is " + hours+ ":" + mins + ":" + secs);
+                //System.out.println("time is " + hours+ ":" + mins + ":" + secs);
 
                 sleep(1000);//Pause of one second or else the time will update too fast.
 
@@ -65,7 +65,7 @@ public class Clock extends Thread {
         int differenceSecs = (int) (difference / 1000); //Difference in seconds. 1 second = 1000 milliseconds.
 
         //If seconds difference is equal to the duration then the timer is completed.
-        if(differenceSecs == duration){
+        if(differenceSecs >= duration){
             return true;
         }
         else{
