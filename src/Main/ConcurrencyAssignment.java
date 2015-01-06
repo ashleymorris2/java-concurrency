@@ -25,7 +25,7 @@ public class ConcurrencyAssignment {
             Clock myClock = new Clock();
 
             Road road1 = new Road(50);
-            Road road2 = new Road(48);
+            Road road2 = new Road(90);
 
             Road road3 = new Road(55);
 
@@ -37,14 +37,17 @@ public class ConcurrencyAssignment {
             junction1.setOutRoads(road2,road2,road2,road2);
 
             junction1.setLightsSequence("NORTH", "east", null, null);
-            junction1.setNorthDuration(60);
-            junction1.setEastDuration(50);
+            junction1.setNorthDuration(120);
+            junction1.setEastDuration(60);
 
 
-            myClock.start();
+
             junction1.start();
             north.start();
             east.start();
+            myClock.start();
+
+
         }
         catch (Exception ex){
             ex.printStackTrace();

@@ -2,6 +2,7 @@ package Concurrency;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
+
 import Enum.Compass;
 
 /**
@@ -13,14 +14,15 @@ public class Junction extends Thread {
     private Road inNorth, inEast, inSouth, inWest; //The roads representing the way into this junction
     private Road outNorth, outEast, outSouth, outWest;//The roads representing the way out of this
 
-    private Compass first, second, third, fourth; //The sequence that the lights operate in represented by direction.
+    private Compass first, second, third, fourth; /*The sequence that the lights operate in
+                                                  represented by direction*/
 
     private int id;
     private int carsThrough = 0;/*A simple counter that counts how many cars
-                             are passed through a junction while it is on green, reset to 0 when red.*/
+                                are passed through a junction while it is on green,
+                                reset to 0 when red.*/
 
     private Clock clock;
-
     private int northDuration, eastDuration, southDuration, westDuration;
 
     //Stores a list of destinations and their associated exit routes from this junction.
@@ -29,7 +31,8 @@ public class Junction extends Thread {
     private Map<Integer, String> destinationList;
 
 
-    /**constructor
+    /**
+     * constructor
      *
      * @param clock
      * @param id
@@ -83,12 +86,12 @@ public class Junction extends Thread {
      * Sets the sequence that the lights operate in, refered to by their direction. Some directions can operate twice,
      * or not at all depending on the configuration.
      *
-     * @param first A string:  The direction of the first light in the sequence.
+     * @param first  A string:  The direction of the first light in the sequence.
      * @param second
      * @param third
      * @param fourth
      */
-    public void setLightsSequence(String first, String second, String third, String fourth){
+    public void setLightsSequence(String first, String second, String third, String fourth) {
 
         String upperCase;
 
@@ -96,44 +99,44 @@ public class Junction extends Thread {
         //Allows for null
         //This will store the direction representing it's position in the sequence.
         try {
-            if(first != null) {
+            if (first != null) {
                 upperCase = first.toUpperCase();
                 this.first = Compass.valueOf(upperCase);
             }
-            if(second!=null) {
+            if (second != null) {
                 upperCase = second.toUpperCase();
                 this.second = Compass.valueOf(upperCase);
             }
-            if(third != null) {
+            if (third != null) {
                 upperCase = third.toUpperCase();
                 this.third = Compass.valueOf(upperCase);
             }
-            if(fourth != null) {
+            if (fourth != null) {
                 upperCase = fourth.toUpperCase();
-                this.third = Compass.valueOf(upperCase);
+                this.fourth = Compass.valueOf(upperCase);
             }
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             //Catch this exception in main.
-            System.out.println("Invalid compass direction!");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid compass direction!");
         }
     }
 
 
     /**
      * Sets the duration that the lights will remain green for, for the different directions.
-     *
      */
     public void setNorthDuration(int northDuration) {
         this.northDuration = northDuration;
     }
+
     public void setEastDuration(int eastDuration) {
         this.eastDuration = eastDuration;
     }
+
     public void setSouthDuration(int southDuration) {
         this.southDuration = southDuration;
     }
+
     public void setWestDuration(int westDuration) {
         this.westDuration = westDuration;
     }
@@ -154,19 +157,21 @@ public class Junction extends Thread {
 
         Road exitRoad;
         Vehicle car;
+        Long timeEntered = clock.getTimeStamp();
+
 
         //Polling to check if a car is available:
         //Keep checking to see if a car is available, if not then sleep.
         //Upon waking check if this light should still be green. Before testing the loop condition again.
         while (!inRoad.isAvailable()) {
             try {
-                sleep(100);
+                sleep((int) (Math.random() * 5));
             } catch (InterruptedException e) {
             }
             if (clock.timerCompleted(timeStamp, duration)) {
                 //Lights have changed!
-                System.out.println("Time:" + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
-                        + carsThrough + " cars through from " + inRoad.getFromDirection() + "," + inRoad.getWaiting() +
+                System.out.println("Time:" + minutesSeconds.format(timeEntered) + " - Junction " + id + ": "
+                        + carsThrough + " cars through from " + inRoad.getFromDirection() + ", " + inRoad.getWaiting() +
                         " cars waiting.");
                 carsThrough = 0;
                 return false;
@@ -175,18 +180,19 @@ public class Junction extends Thread {
 
         //Ask the next car its destination, provides the cars destination integer and returns a road.
         exitRoad = getExitRoute(inRoad.getNextDestination());
-
+        if(exitRoad == null) {
+            throw new NullPointerException("The exit route doesn't lead to a valid exit road");
+        }
 
         //Check for gridlock and then keep checking to see if the road ahead clears.
         while (!exitRoad.isSpace()) {
             try {
-                sleep(100);
+                sleep((int) (Math.random() * 5));
             } catch (InterruptedException e) {
             }
             if (clock.timerCompleted(timeStamp, duration)) {
-
                 //Lights have changed! Final report:
-                System.out.println("Time: " + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
+                System.out.println("Time: " + minutesSeconds.format(timeEntered) + " - Junction " + id + ": "
                         + carsThrough + " cars through from " + inRoad.getFromDirection() + ", " + inRoad.getWaiting() +
                         " cars waiting. GRIDLOCK");
                 carsThrough = 0;
@@ -197,77 +203,112 @@ public class Junction extends Thread {
         //If it has made it this far then it is ok to proceed.
         car = inRoad.extract();
         exitRoad.insert(car);
-        carsThrough++;
 
         //Sleep to represent cars moving over the junction.
         try {
             sleep(1000);//1 second sleep. Maximum rate of 12 per minute.  (60/12 = 5)
-                        // The clock is running in 5 second intervals. 1 second sleep allows the maximum rate of 12 a minute.
+            // The clock is running in 5 second intervals. 1 second sleep allows the maximum rate of 12 a minute.
 
         } catch (InterruptedException iex) {
 
         }
 
+        carsThrough++;
 
         //Final check to see if lights are still on green or not:
-        if (!clock.timerCompleted(timeStamp, duration)) {
-            //Timer hasn't completed the lights are still green:
-            return true;
-        } else {
-            //Final report.
-            System.out.println("Time:" + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
+        if (clock.timerCompleted(timeStamp, duration)) {
+
+            //Final report:
+            System.out.println("Time: " + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
                     + carsThrough + " cars through from " + inRoad.getFromDirection() + ", " + inRoad.getWaiting() +
                     " cars waiting.");
+
             carsThrough = 0;
             return false;
+
+        } else {
+            return true; //Timer hasn't completed the lights are still green:
         }
     }
 
     public void run() {
 
         //Loop while the simulation is running.
-        while (clock.simulationRunning()){
+        while (clock.simulationRunning()) {
 
             Road currentRoad; //The current road that we are working with.
             int currentDuration; //Duration that the light will remain green for.
             Long timeStamp; //Represents the time that the loop is first entered.
 
             //First
-            if(first != null) {
-            currentRoad = getInRoad(first.toString());
-            currentDuration = getDuration(first.toString());
-            timeStamp = clock.getTimeStamp();
-                System.out.println("Lights 1 entered: " +minutesSeconds.format(timeStamp));
+            //Null check to make sure that Compass.first points to a valid direction.
+            if (first != null) {
+                timeStamp = clock.getTimeStamp();
+                currentRoad = getInRoad(first.toString());
+                currentDuration = getDuration(first.toString());
+
+                //Sleep to represent 1st car moving over the junction.
+                try {
+                    sleep(1000);//1 second sleep.
+                } catch (InterruptedException iex) {
+
+                }
+
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
+                    //Loops while this section of road is green. Moves to the next loop when it isn't.
 
                 }
             }
 
             //Second
-            if(second != null) {
+            if (second != null) {
                 currentRoad = getInRoad(second.toString());
                 currentDuration = getDuration(second.toString());
                 timeStamp = clock.getTimeStamp();
+
+                //Sleep to represent 1st car moving over the junction.
+                try {
+                    sleep(1000);//1 second sleep.
+                } catch (InterruptedException iex) {
+
+                }
+
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
 
                 }
             }
 
             //Third
-            if(third != null) {
+            if (third != null) {
                 currentRoad = getInRoad(third.toString());
                 currentDuration = getDuration(third.toString());
                 timeStamp = clock.getTimeStamp();
+
+                //Sleep to represent cars moving over the junction.
+                try {
+                    sleep(1000);//1 second sleep.
+                } catch (InterruptedException iex) {
+
+                }
+
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
 
                 }
             }
 
             //Fourth
-            if(fourth != null) {
+            if (fourth != null) {
                 currentRoad = getInRoad(fourth.toString());
                 currentDuration = getDuration(fourth.toString());
                 timeStamp = clock.getTimeStamp();
+
+                //Sleep to represent cars moving over the junction.
+                try {
+                    sleep(1000);//1 second sleep.
+                } catch (InterruptedException iex) {
+
+                }
+
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
 
                 }
@@ -284,7 +325,7 @@ public class Junction extends Thread {
      * @param destination The vehicles final destination. Maps to one of 4 directions out of the junction.
      * @return The exit road that maps to that destination.
      */
-    private Road getExitRoute(int destination){
+    private Road getExitRoute(int destination) {
 
         //Searches the map by the destination.
         String exitDirection = destinationList.get(destination);
@@ -306,7 +347,7 @@ public class Junction extends Thread {
             }
         }
         //ValueOf throws IllegalArgumentException if passed a string that isn't a valid member.
-        catch (IllegalArgumentException ie){
+        catch (IllegalArgumentException ie) {
             //Catch in main.
             System.out.println("Invalid compass direction!");
             throw new IllegalArgumentException();
@@ -323,9 +364,8 @@ public class Junction extends Thread {
      * @param inputDirection The direction of this junction that the road comes into.
      * @return A Road that comes in from that direction.
      */
-    private Road getInRoad(String inputDirection)
-    {
-        try{
+    private Road getInRoad(String inputDirection) {
+        try {
             Compass direction = Compass.valueOf(inputDirection);
             switch (direction) {
                 case NORTH:
@@ -338,10 +378,9 @@ public class Junction extends Thread {
                     return inWest;
             }
         }//ValueOf throws IllegalArgumentException if passed a string that isn't a valid member.
-        catch (IllegalArgumentException iex){
+        catch (IllegalArgumentException iex) {
             //Catch in main.
-            System.out.println("Invalid compass direction!");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid compass direction!");
 
         }
 
@@ -349,9 +388,16 @@ public class Junction extends Thread {
         return null;
     }
 
-    private int getDuration(String inputDirection)
-    {
-        try{
+
+    /**
+     * Takes a direction in string form and returns the saved duration for that direction.
+     *
+     * @param inputDirection The direction that is to be searched for.
+     *
+     * @return An integer, the duration the lights in that direction stay on green in seconds.
+     */
+    private int getDuration(String inputDirection) {
+        try {
             Compass direction = Compass.valueOf(inputDirection);
             switch (direction) {
                 case NORTH:
@@ -364,14 +410,13 @@ public class Junction extends Thread {
                     return westDuration;
             }
         }//ValueOf throws IllegalArgumentException if passed a string that isn't a valid member.
-        catch (IllegalArgumentException iex){
+        catch (IllegalArgumentException iex) {
             //Catch in main.
-            System.out.println("Invalid compass direction!");
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid compass direction!");
 
         }
 
-       return 0;
+        return 0;
     }
 
 }
