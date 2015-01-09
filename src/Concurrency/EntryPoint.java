@@ -22,14 +22,14 @@ public class EntryPoint extends Thread {
     private Vehicle car; //The car that is generated to be passed into the buffer (road)
     private Road road; //The buffer that represents the section of road that this entry point is connected to.
 
-    private String id; // The name of this entry point. (North, East or South)
+    private String name; // The name of this entry point. (North, East or South)
     private int maxNumOfCars;//The maximum number of cars that this entry point is to generate per hour.
 
     private Clock clock;
 
-    public EntryPoint(Road road, String id, int maxNumOfCars, Clock clock) {
+    public EntryPoint(Road road, String name, int maxNumOfCars, Clock clock) {
         this.road = road;
-        this.id = id;
+        this.name = name;
         this.maxNumOfCars = maxNumOfCars;
         this.clock = clock;
     }
@@ -51,17 +51,22 @@ public class EntryPoint extends Thread {
 
     @Override
     public void run() {
-        if(road.isSpace()){
-        for (int i = 0; i < maxNumOfCars; i++) {
-            try {
-                sleep((int) (Math.random()) * 50);
-            } catch (InterruptedException iex) {
+        if (road.isSpace()) {
+            for (int i = 0; i < maxNumOfCars; i++) {
+                try {
+                    sleep((int) (Math.random()) * 50);
+                } catch (InterruptedException iex) {
 
+                }
+                //Check to see if there is any space on the road before attempting to place a car on it.
+                generate();
+
+                if (!clock.simulationRunning()) {
+                    //timer is up, stop thread?
+                    break;
+                }
             }
-            //Check to see if there is any space on the road before attempting to place a car on it.
 
-            generate();
-        }
         }
     }
 

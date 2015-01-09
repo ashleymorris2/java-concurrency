@@ -11,7 +11,10 @@ public class Clock extends Thread {
     private static Calendar time;
     private static int hours, mins, secs;
 
+    private CarPark [] carParks;
+
     private boolean simulation;
+
 
     public Clock() {
         //Constructs a clock and sets the time to 12pm.
@@ -41,9 +44,23 @@ public class Clock extends Thread {
                     simulation = false;
                 }
 
+                //If the number is divisible by 5 with no remainder must be a multiple of 5 minutes.
+                if (mins % 5 ==0 && secs ==0){
+                    System.out.println("");
+                    System.out.println("Time: " + mins + "m   ");
+
+                    //Check for null or else don't attempt to print any results
+                    if(carParks != null) {
+                        for (int i = 0; i < carParks.length; i++) {
+                            System.out.println(carParks[i].getCarparkName() + ": " + carParks[i].getRemaining() + " Spaces");
+                        }
+                        System.out.println("");
+                    }
+                }
+
                 //System.out.println("time is " + hours+ ":" + mins + ":" + secs);
 
-                sleep(200);//Pause of one second or else the time will update too fast.
+                sleep(200);//Pause of 1/5 a second or else the time will update too fast.
 
             }
             catch (InterruptedException iex) {
@@ -66,7 +83,7 @@ public class Clock extends Thread {
         int differenceSecs = (int) (difference / 1000); //Difference in seconds. 1 second = 1000 milliseconds.
 
         //If seconds difference is equal to the duration then the timer is completed.
-        if(differenceSecs <= duration){
+        if(differenceSecs < duration){
             return false;
         }
         else{
@@ -74,6 +91,14 @@ public class Clock extends Thread {
         }
     }
 
+
+    /**
+     *
+     * @param carParks
+     */
+    public void setCarParks(CarPark [] carParks){
+        this.carParks = carParks;
+    }
 
     /**
      * Returns the status of the simulation.
@@ -94,6 +119,17 @@ public class Clock extends Thread {
         long timeStamp = time.getTimeInMillis();
 
         return timeStamp;
+    }
+
+
+    public synchronized int getHours(){
+        return hours;
+    }
+    public synchronized int getMins(){
+        return mins;
+    }
+    public synchronized int getSecs(){
+        return secs;
     }
 
 

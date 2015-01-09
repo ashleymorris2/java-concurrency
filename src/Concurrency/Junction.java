@@ -157,8 +157,6 @@ public class Junction extends Thread {
 
         Road exitRoad;
         Vehicle car;
-        Long timeEntered = clock.getTimeStamp();
-
 
         //Polling to check if a car is available:
         //Keep checking to see if a car is available, if not then sleep.
@@ -170,7 +168,7 @@ public class Junction extends Thread {
             }
             if (clock.timerCompleted(timeStamp, duration)) {
                 //Lights have changed!
-                System.out.println("Time:" + minutesSeconds.format(timeEntered) + " - Junction " + id + ": "
+                System.out.println("Time: " + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
                         + carsThrough + " cars through from " + inRoad.getFromDirection() + ", " + inRoad.getWaiting() +
                         " cars waiting.");
                 carsThrough = 0;
@@ -192,7 +190,7 @@ public class Junction extends Thread {
             }
             if (clock.timerCompleted(timeStamp, duration)) {
                 //Lights have changed! Final report:
-                System.out.println("Time: " + minutesSeconds.format(timeEntered) + " - Junction " + id + ": "
+                System.out.println("Time: " + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
                         + carsThrough + " cars through from " + inRoad.getFromDirection() + ", " + inRoad.getWaiting() +
                         " cars waiting. GRIDLOCK");
                 carsThrough = 0;
@@ -219,7 +217,7 @@ public class Junction extends Thread {
         if (clock.timerCompleted(timeStamp, duration)) {
 
             //Final report:
-            System.out.println("Time: " + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
+                        System.out.println("Time: " + minutesSeconds.format(clock.getTimeStamp()) + " - Junction " + id + ": "
                     + carsThrough + " cars through from " + inRoad.getFromDirection() + ", " + inRoad.getWaiting() +
                     " cars waiting.");
 
@@ -247,13 +245,6 @@ public class Junction extends Thread {
                 currentRoad = getInRoad(first.toString());
                 currentDuration = getDuration(first.toString());
 
-                //Sleep to represent 1st car moving over the junction.
-                try {
-                    sleep(1000);//1 second sleep.
-                } catch (InterruptedException iex) {
-
-                }
-
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
                     //Loops while this section of road is green. Moves to the next loop when it isn't.
 
@@ -266,13 +257,6 @@ public class Junction extends Thread {
                 currentDuration = getDuration(second.toString());
                 timeStamp = clock.getTimeStamp();
 
-                //Sleep to represent 1st car moving over the junction.
-                try {
-                    sleep(1000);//1 second sleep.
-                } catch (InterruptedException iex) {
-
-                }
-
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
 
                 }
@@ -284,13 +268,6 @@ public class Junction extends Thread {
                 currentDuration = getDuration(third.toString());
                 timeStamp = clock.getTimeStamp();
 
-                //Sleep to represent cars moving over the junction.
-                try {
-                    sleep(1000);//1 second sleep.
-                } catch (InterruptedException iex) {
-
-                }
-
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
 
                 }
@@ -301,13 +278,6 @@ public class Junction extends Thread {
                 currentRoad = getInRoad(fourth.toString());
                 currentDuration = getDuration(fourth.toString());
                 timeStamp = clock.getTimeStamp();
-
-                //Sleep to represent cars moving over the junction.
-                try {
-                    sleep(1000);//1 second sleep.
-                } catch (InterruptedException iex) {
-
-                }
 
                 while (isGreen(currentRoad, timeStamp, currentDuration)) {
 
