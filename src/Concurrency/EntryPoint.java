@@ -61,6 +61,7 @@ public class EntryPoint extends Thread {
                 //Check to see if there is any space on the road before attempting to place a car on it.
                 generate();
 
+
                 if (!clock.simulationRunning()) {
                     //timer is up, stop thread?
                     break;

@@ -61,11 +61,11 @@ public class ConcurrencyAssignment {
             destinationList1.put(4, "WEST");
 
             Junction junction1 = new Junction(myClock, 1, destinationList1);
-            junction1.setLightsSequence("SOUTH", "NORTH", null, null );
+            junction1.setLightsSequence("NORTH", "SOUTH", null, null );
             junction1.setInRoads(road2B_South, null, entry_a3, null);
             junction1.setOutRoads(road1A_North, null, null, road1B_West);
-            junction1.setSouthDuration(120);
-            junction1.setNorthDuration(30);
+            junction1.setSouthDuration(340);
+            junction1.setNorthDuration(380);
 
 
             //Junction 2: =================
@@ -77,11 +77,12 @@ public class ConcurrencyAssignment {
             destinationList2.put(4, "SOUTH");
 
             Junction junction2 = new Junction(myClock, 2, destinationList2);
-            junction2.setLightsSequence("EAST", "NORTH", "SOUTH", null);
+            junction2.setLightsSequence("NORTH", "SOUTH", "EAST", null);
             junction2.setInRoads(road3B_East, entry_a2, road1A_North, null);
             junction2.setOutRoads(road2A_North, null, road2B_South, null);
-            junction2.setEastDuration(60);
-            junction2.setSouthDuration(20);
+            junction2.setNorthDuration(360);
+            junction2.setEastDuration(100);
+            junction2.setSouthDuration(340);
 
             //Junction 3: =================
             //Junction three destination list:
@@ -95,8 +96,8 @@ public class ConcurrencyAssignment {
             junction3.setLightsSequence("NORTH", "EAST", null, null);
             junction3.setInRoads(entry_a1,road2A_North, null, null);
             junction3.setOutRoads(null, road3B_East, road3C_South, road3A_West);
-            junction3.setNorthDuration(80);
-            junction3.setSouthDuration(30);
+            junction3.setNorthDuration(360);
+            junction3.setEastDuration(360);
 
             //Junction 4: =================
             //Junction four destination list:
@@ -110,7 +111,7 @@ public class ConcurrencyAssignment {
             junction4.setLightsSequence("EAST", null, null, null);
             junction4.setInRoads(null,road3A_West, null, null);
             junction4.setOutRoads(road4A_North, null, road4B_South, null);
-            junction4.setEastDuration(25);
+            junction4.setEastDuration(120);
 
 
             //Car Parks: ======
@@ -119,6 +120,7 @@ public class ConcurrencyAssignment {
             carParks[2] = new CarPark(3, "Shopping Centre", road3C_South, 400, myClock);
             carParks[3] = new CarPark(4, "Industrial Park", road1B_West, 1000, myClock);
 
+            //To report how many cars have parked every 5 minutes.
             myClock.setCarParks(carParks);
 
             northEntry.start();

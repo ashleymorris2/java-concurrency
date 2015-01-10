@@ -39,11 +39,6 @@ public class Clock extends Thread {
                 mins = time.get(Calendar.MINUTE);
                 secs = time.get(Calendar.SECOND);
 
-                if(hours == 13 && mins == 0 && secs == 0){
-                    System.out.println("OVER");
-                    simulation = false;
-                }
-
                 //If the number is divisible by 5 with no remainder must be a multiple of 5 minutes.
                 if (mins % 5 ==0 && secs ==0){
                     System.out.println("");
@@ -55,6 +50,11 @@ public class Clock extends Thread {
                             System.out.println(carParks[i].getCarparkName() + ": " + carParks[i].getRemaining() + " Spaces");
                         }
                         System.out.println("");
+                    }
+
+                    if(hours == 13 && mins == 0 && secs == 0){
+                        System.out.println("OVER");
+                        simulation = false;
                     }
                 }
 
