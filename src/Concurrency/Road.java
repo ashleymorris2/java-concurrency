@@ -74,7 +74,7 @@ public class Road {
         //Check to see if the buffer is full and tell the producers to wait if so.
         while (available == cars.length){
             //Remove:
-            System.out.println("waiting on insert");
+            //System.out.println("waiting on insert");
             try{
                 wait();
             } catch (InterruptedException iex) {
@@ -108,7 +108,7 @@ public class Road {
 
         //Wait while the buffer is empty
         while (available == 0){
-            System.out.println("waiting on extract");
+            //System.out.println("waiting on extract");
             try {
                 wait();
             }

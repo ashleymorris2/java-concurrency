@@ -158,6 +158,10 @@ public class Junction extends Thread {
         Road exitRoad;
         Vehicle car;
 
+        if(inRoad == null){
+            throw new NullPointerException("Road at junction " +id+  " is null");
+        }
+
         //Polling to check if a car is available:
         //Keep checking to see if a car is available, if not then sleep.
         //Upon waking check if this light should still be green. Before testing the loop condition again.
@@ -179,7 +183,7 @@ public class Junction extends Thread {
         //Ask the next car its destination, provides the cars destination integer and returns a road.
         exitRoad = getExitRoute(inRoad.getNextDestination());
         if(exitRoad == null) {
-            throw new NullPointerException("The exit route doesn't lead to a valid exit road");
+            throw new NullPointerException("The exit route doesn't lead to a valid exit road at junction " +id);
         }
 
         //Check for gridlock and then keep checking to see if the road ahead clears.
